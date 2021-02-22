@@ -2,7 +2,6 @@ package es.nauticapps.spotymedia.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import es.nauticapps.spotymedia.R
 import es.nauticapps.spotymedia.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -13,8 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-
-        setContentView(R.layout.activity_main)
     }
 }

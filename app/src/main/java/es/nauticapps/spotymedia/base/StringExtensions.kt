@@ -7,8 +7,9 @@ fun String.prettyDate(): String {
         val rawFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         val prettyFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
         val date = rawFormat.parse(this)
-        val result = prettyFormat.format(date)
-        result
+        if (date == null) this
+        else prettyFormat.format(date)
+
 
     }
     catch (e: Exception) {
