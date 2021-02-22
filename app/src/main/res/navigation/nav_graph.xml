@@ -18,5 +18,9 @@
         android:name="es.nauticapps.spotymedia.ui.artist.ArtistFragment"
         android:label="ArtistFragment"
         tools:layout="@layout/fragment_artist"
-        />
+        >
+        <argument
+            android:name="test"
+            app:argType="string" />
+    </fragment>
 </navigation>

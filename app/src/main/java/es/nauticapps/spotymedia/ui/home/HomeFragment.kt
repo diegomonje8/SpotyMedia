@@ -22,7 +22,7 @@ class HomeFragment : Fragment() {
 
 
         binding.button.setOnClickListener(View.OnClickListener {
-            findNavController().navigate(R.id.action_homeFragment2_to_artistFragment)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragment2ToArtistFragment("Safe ARgs Working"))
         })
 
         return binding.root
