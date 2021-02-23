@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/homeFragment2"
         android:name="es.nauticapps.spotymedia.ui.home.HomeFragment"
-        android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" >
+        android:label="Spoty Media"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment2_to_artistFragment"
             app:destination="@id/artistFragment" />
@@ -16,9 +16,8 @@
     <fragment
         android:id="@+id/artistFragment"
         android:name="es.nauticapps.spotymedia.ui.artist.ArtistFragment"
-        android:label="ArtistFragment"
-        tools:layout="@layout/fragment_artist"
-        >
+        android:label="Artists"
+        tools:layout="@layout/fragment_artist">
         <argument
             android:name="test"
             app:argType="string" />
