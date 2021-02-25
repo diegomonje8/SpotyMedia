@@ -15,12 +15,12 @@ class HomeViewModel: ViewModel() {
     private val state = MutableLiveData<BaseState>()
     fun getState() : LiveData<BaseState> = state
 
-    fun requestAuth() {
+    fun requestArtist() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 state.postValue(BaseState.Loading())
-                val listResult = SpotyRepository().requestauth()
-                state.postValue(BaseState.Normal(HomeListState(listResult)))
+                val hi = SpotyRepository().requestArtist()
+
             }catch(e: Exception) {
                 state.postValue(BaseState.Error(e))
             }
@@ -29,3 +29,4 @@ class HomeViewModel: ViewModel() {
     }
 
 }
+

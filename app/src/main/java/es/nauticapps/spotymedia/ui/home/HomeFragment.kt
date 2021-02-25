@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragment2ToArtistFragment("Safe ARgs Working"))
         })
 
-        viewModel.requestAuth()
+        viewModel.requestArtist()
         
         return binding.root
     }
