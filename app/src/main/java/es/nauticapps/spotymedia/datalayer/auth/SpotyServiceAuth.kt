@@ -1,6 +1,6 @@
 package es.nauticapps.spotymedia.datalayer.auth
 
-import es.nauticapps.spotymedia.datalayer.models.ResponseAuthDataModel
+import es.nauticapps.spotymedia.datalayer.auth.models.ResponseAuthDataModel
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

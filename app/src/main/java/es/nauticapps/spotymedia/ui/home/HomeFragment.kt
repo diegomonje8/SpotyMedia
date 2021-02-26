@@ -11,9 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import es.nauticapps.spotymedia.R
 import es.nauticapps.spotymedia.base.BaseState
+import es.nauticapps.spotymedia.base.hideKeyboard
 import es.nauticapps.spotymedia.databinding.FragmentHomeBinding
+import es.nauticapps.spotymedia.datalayer.models.ArtistModel
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
@@ -22,11 +23,9 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
     lateinit var binding: FragmentHomeBinding
+    lateinit var myAdapter: HomeFragmentAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater,container,false)
 
         viewModel.getState().observe(viewLifecycleOwner)  { state ->
@@ -39,11 +38,7 @@ class HomeFragment : Fragment() {
 
         setupView()
 
-        binding.button.setOnClickListener(View.OnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragment2ToArtistFragment("Safe ARgs Working"))
-        })
-
-        viewModel.requestArtist()
+        viewModel.requestArtist("clapton")
         
         return binding.root
     }
@@ -53,6 +48,23 @@ class HomeFragment : Fragment() {
      */
     private fun setupView() {
 
+        myAdapter = HomeFragmentAdapter(listOf<ArtistModel>()) { artist ->
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragment2ToArtistFragment(artist))
+        }
+
+        val myRecyclerView : RecyclerView = binding.myRecyclerList
+        myRecyclerView.apply {
+            adapter = myAdapter
+            layoutManager = LinearLayoutManager(context)
+            itemAnimator = DefaultItemAnimator()
+        }
+
+        binding.outlinedTextField.setEndIconOnClickListener(View.OnClickListener {
+            val searchedText = binding.outlinedTextField.editText?.text.toString()
+            viewModel.requestArtist(searchedText)
+            hideKeyboard()
+        })
+
     }
 
 
@@ -60,21 +72,22 @@ class HomeFragment : Fragment() {
      * Normal State Actions
      */
     private fun updateToNormalState(data: HomeListState) {
-
+        binding.fragmentHomeProgressBar.visibility = View.GONE
+        myAdapter.updateList((data).listArtists)
     }
 
     /**
      * Loading State Actions
      */
     private fun updateToLoadinglState() {
-
+        binding.fragmentHomeProgressBar.visibility = View.VISIBLE
     }
 
     /**
      * Error State Actions
      */
     private fun updateToErrorState(dataError : Throwable) {
-
+        binding.fragmentHomeProgressBar.visibility = View.GONE
         val msg = when (dataError) {
             is HttpException -> "Network Error: " + dataError.code().toString()
             is UnknownHostException -> "Please, Internet connection needed !!"

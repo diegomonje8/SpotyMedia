@@ -19,7 +19,7 @@
         android:label="Artists"
         tools:layout="@layout/fragment_artist">
         <argument
-            android:name="test"
-            app:argType="string" />
+            android:name="artist"
+            app:argType="es.nauticapps.spotymedia.datalayer.models.ArtistModel" />
     </fragment>
 </navigation>

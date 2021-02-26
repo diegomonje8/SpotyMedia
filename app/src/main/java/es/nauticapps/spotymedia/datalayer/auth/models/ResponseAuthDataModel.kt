@@ -1,4 +1,4 @@
-package es.nauticapps.spotymedia.datalayer.models
+package es.nauticapps.spotymedia.datalayer.auth.models
 
 data class ResponseAuthDataModel (
     val access_token : String,

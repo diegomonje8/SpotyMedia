@@ -4,7 +4,10 @@ import android.util.Log
 import es.nauticapps.spotymedia.BuildConfig
 import es.nauticapps.spotymedia.datalayer.auth.RefreshTokenAuthenticate
 import es.nauticapps.spotymedia.datalayer.auth.SpotyNetworkAuth
+import es.nauticapps.spotymedia.datalayer.models.AlbumResponseModel
+import es.nauticapps.spotymedia.datalayer.models.RelatedArtistsModel
 import es.nauticapps.spotymedia.datalayer.models.SearchModel
+import es.nauticapps.spotymedia.datalayer.models.TracksResponseModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -51,14 +54,34 @@ class SpotyNetwork {
 
     }
 
-    suspend fun getSearch() : SearchModel {
+    suspend fun getSearch(searchText: String) : SearchModel {
 
         val authToken = SpotyNetworkAuth().getAuthToken()
-        //val authToken = "BQCSAXy_73ot6WtomJ1oDCeDPUjln9UXF5Y5ZjpIOvoHifUWrxc1r5NAa7KHJPVPttqNrPNJECPJGiFgbfQ"
-        Log.e("TOKEN", authToken)
         loadRetrofit(authToken)
-        val art = service.getArtists("clapton", "artist")
-        return art
+        return service.getArtists(searchText, "artist")
     }
+
+    suspend fun getArtistsTopTracks(artistId: String) : TracksResponseModel {
+
+        loadRetrofit(SpotyNetworkAuth().getAuthToken())
+        return service.getArtistTopTracks(artistId, "ES")
+
+    }
+
+    suspend fun getArtistsAlbums(artistId: String) : AlbumResponseModel {
+
+        loadRetrofit(SpotyNetworkAuth().getAuthToken())
+        return service.getArtistAlbums(artistId, 50)
+
+    }
+
+    suspend fun getArtistsRelated(artistId: String) : RelatedArtistsModel {
+
+        loadRetrofit(SpotyNetworkAuth().getAuthToken())
+        return service.getArtistRelated(artistId)
+
+    }
+
+
 
 }
