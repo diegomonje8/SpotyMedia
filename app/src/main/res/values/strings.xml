@@ -7,4 +7,12 @@
     <string name="artist_image">Artist Image</string>
     <string name="album_image">Album Image</string>
     <string name="top_track_name">Top Track Name</string>
+    <string name="artists_genres">Artists genres</string>
+    <string name="followers_icon">Followers Icon</string>
+    <string name="rating_icon">Rating Icon</string>
+    <string name="followers">Followers</string>
+    <string name="ranking">Ranking</string>
+    <string name="album_name">Album Name</string>
+    <string name="duration_icon">Duration Icon</string>
+    <string name="duration_track">Duration Track</string>
 </resources>

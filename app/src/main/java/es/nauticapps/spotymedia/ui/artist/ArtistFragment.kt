@@ -53,7 +53,7 @@ class ArtistFragment : Fragment() {
             tab.text = when(position) {
                 0-> "Top Tracks"
                 1-> "Albums"
-                2-> "Friends"
+                2-> "Related Artists"
                 else -> ""
             }
 

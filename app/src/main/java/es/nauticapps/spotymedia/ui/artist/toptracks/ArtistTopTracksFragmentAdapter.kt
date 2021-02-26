@@ -27,7 +27,10 @@ class ArtistTopTracksFragmentAdapter(private var tracks: List<Track>) : Recycler
             myImage = tracks[position].album.images.firstOrNull()?.url ?: "https://images-assets.nasa.gov/image/PIA17669/PIA17669~thumb.jpg"
         } catch(e: Exception ) {  Log.e ("Spoty Media Error", "Error catching image")  }
 
-        viewHolder.binding.artTextName.text = tracks[position].name
+        viewHolder.binding.artTopTrackNameText.text = tracks[position].name
+        viewHolder.binding.artTopTrackAlbumNameText.text = tracks[position].album.name
+        viewHolder.binding.artTopTrackDurationText.text = getTrackDuration(tracks[position].duration_ms)
+        viewHolder.binding.artTopTrackRankingText.text = tracks[position].popularity.toString()
 
         Picasso.get()
             .load(myImage)
@@ -36,6 +39,13 @@ class ArtistTopTracksFragmentAdapter(private var tracks: List<Track>) : Recycler
             .placeholder(R.drawable.ic_extraterrestre)
             .into(viewHolder.binding.artTopTrackImage)
 
+    }
+
+    private fun getTrackDuration(miliseconds: Int) : String {
+
+        val seconds = (miliseconds / 1000) % 60
+        val minutes = (miliseconds/ (1000*60)) % 60
+        return "$minutes' : $seconds\""
     }
 
     override fun getItemCount() = tracks.size

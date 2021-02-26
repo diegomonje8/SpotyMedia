@@ -7,4 +7,5 @@ import java.io.Serializable
 data class ArtistTopTrackListState(
 
     val listTopTracks : List<Track> = listOf()
+
 ):Serializable

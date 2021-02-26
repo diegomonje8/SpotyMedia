@@ -42,14 +42,14 @@ class ArtistTopTracksFragment(private val artistId: String) : Fragment() {
             }
         }
 
-        setupView(artistId)
+        setupView()
 
         viewModel.requestTopTracks(artistId)
 
         return binding.root
     }
 
-    private fun setupView(artistId: String) {
+    private fun setupView() {
 
         myAdapter = ArtistTopTracksFragmentAdapter(listOf<Track>())
 
