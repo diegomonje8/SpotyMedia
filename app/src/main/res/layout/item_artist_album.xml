@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/albumTrackImage"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/album_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/albumTextName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/album_name"
+            android:textAlignment="viewStart"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/albumTrackImage"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/albumTextArtists"
+            android:layout_width="233dp"
+            android:layout_height="59dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/artist_name"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/albumTrackImage"
+            app:layout_constraintTop_toBottomOf="@+id/albumTextName" />
+
+        <ImageView
+            android:id="@+id/albumFollowersIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/followers_icon"
+            android:fontFamily="@font/montserrat"
+            app:layout_constraintStart_toEndOf="@+id/albumTrackImage"
+            app:layout_constraintTop_toBottomOf="@+id/albumTextArtists"
+            app:srcCompat="@drawable/ic_baseline_calendar_today_24" />
+
+        <TextView
+            android:id="@+id/albumDateText"
+            android:layout_width="0dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/album_date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/albumFollowersIcon" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
