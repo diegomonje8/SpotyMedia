@@ -17,4 +17,7 @@
     <string name="duration_track">Duration Track</string>
     <string name="album_date">Album Date</string>
     <string name="tracks">Tracks</string>
+    <string name="realeses">Realeses</string>
+    <string name="feature_by">Feature By</string>
+    <string name="releases">Releases</string>
 </resources>

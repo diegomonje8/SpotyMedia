@@ -1,6 +1,5 @@
 package es.nauticapps.spotymedia.datalayer.network
 
-import android.util.Log
 import es.nauticapps.spotymedia.BuildConfig
 import es.nauticapps.spotymedia.datalayer.auth.RefreshTokenAuthenticate
 import es.nauticapps.spotymedia.datalayer.auth.SpotyNetworkAuth
@@ -83,6 +82,20 @@ class SpotyNetwork {
 
         loadRetrofit(SpotyNetworkAuth().getAuthToken())
         return service.getAlbumTracks(idAlbum, 50)
+
+    }
+
+    suspend fun getReleases() : ReleaseModel {
+
+        loadRetrofit(SpotyNetworkAuth().getAuthToken())
+        return service.getRealese()
+
+    }
+
+    suspend fun getFeatures(): FeaturesModel {
+
+        loadRetrofit(SpotyNetworkAuth().getAuthToken())
+        return service.getFeatures()
 
     }
 

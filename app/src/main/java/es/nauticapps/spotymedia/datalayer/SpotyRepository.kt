@@ -1,9 +1,6 @@
 package es.nauticapps.spotymedia.datalayer
 
-import es.nauticapps.spotymedia.datalayer.models.AlbumItem
-import es.nauticapps.spotymedia.datalayer.models.AlbumTracks
-import es.nauticapps.spotymedia.datalayer.models.ArtistModel
-import es.nauticapps.spotymedia.datalayer.models.Track
+import es.nauticapps.spotymedia.datalayer.models.*
 import es.nauticapps.spotymedia.datalayer.network.SpotyNetwork
 
 class SpotyRepository {
@@ -27,4 +24,14 @@ class SpotyRepository {
     suspend fun requestAlbumTracks(albumId: String) : List<AlbumTracks> {
         return SpotyNetwork().getAlbumTracks(albumId).items
     }
+
+    suspend fun requestRealeses() : List<RealeaseItem> {
+        return SpotyNetwork().getReleases().albums.items
+    }
+
+    suspend fun requestFeatures() : List<FeaturesItem> {
+        return SpotyNetwork().getFeatures().playlists.items
+    }
+
+
 }

@@ -23,6 +23,12 @@ interface SpotyService {
     @GET( "albums/{id}/tracks")
     suspend fun getAlbumTracks(@Path( "id") id : String, @Query("limit") limit: Int) : TracksFromAlbumModel
 
+    @GET( "browse/new-releases")
+    suspend fun getRealese() : ReleaseModel
+
+    @GET( "browse/featured-playlists")
+    suspend fun getFeatures() : FeaturesModel
+
 
 
 }

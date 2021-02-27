@@ -9,6 +9,46 @@
         tools:context=".ui.home.HomeArtist">
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/homeFragmentrecyclerViewRealease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewRealeseTitle" />
+
+        <TextView
+            android:id="@+id/textViewRealeseTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/releases"
+            android:textSize="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewFeatureTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/feature_by"
+            android:textSize="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/homeFragmentrecyclerViewRealease" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/homeFragmentrecyclerFeature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewFeatureTitle" />
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/outlinedTextField"
@@ -16,20 +56,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:hint="@string/search_artist"
+            android:textColorHint="@color/spoty"
+            app:boxStrokeColor="@color/spoty"
+            app:endIconContentDescription="SearchIcon"
+            app:endIconDrawable="@drawable/ic_baseline_search_24"
+            app:endIconMode="custom"
+            app:endIconTint="@color/spoty"
+            app:hintTextColor="@color/spoty"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:boxStrokeColor="@color/spoty"
-            android:textColorHint="@color/spoty"
-            app:hintTextColor="@color/spoty"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/ic_baseline_search_24"
-            app:endIconContentDescription="SearchIcon"
-            app:endIconTint="@color/spoty"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/homeFragmentrecyclerFeature">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editText"
@@ -63,6 +101,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

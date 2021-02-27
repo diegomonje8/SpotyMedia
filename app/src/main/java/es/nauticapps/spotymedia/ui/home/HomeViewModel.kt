@@ -20,11 +20,14 @@ class HomeViewModel: ViewModel() {
             try {
                 state.postValue(BaseState.Loading())
                 val listResult = SpotyRepository().requestArtist(searchText)
-                state.postValue(BaseState.Normal(HomeListState(listResult)))
+                val listResultRelease = SpotyRepository().requestRealeses()
+                val listResultFeatures = SpotyRepository().requestFeatures()
+                state.postValue(BaseState.Normal(HomeListState(listResult, listResultRelease, listResultFeatures)))
             }catch(e: Exception) {
                 state.postValue(BaseState.Error(e))
             }
         }
     }
+
 }
 
