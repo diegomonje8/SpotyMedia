@@ -16,4 +16,5 @@
     <string name="duration_icon">Duration Icon</string>
     <string name="duration_track">Duration Track</string>
     <string name="album_date">Album Date</string>
+    <string name="tracks">Tracks</string>
 </resources>

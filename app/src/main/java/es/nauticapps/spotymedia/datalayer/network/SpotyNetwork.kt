@@ -4,10 +4,7 @@ import android.util.Log
 import es.nauticapps.spotymedia.BuildConfig
 import es.nauticapps.spotymedia.datalayer.auth.RefreshTokenAuthenticate
 import es.nauticapps.spotymedia.datalayer.auth.SpotyNetworkAuth
-import es.nauticapps.spotymedia.datalayer.models.AlbumResponseModel
-import es.nauticapps.spotymedia.datalayer.models.RelatedArtistsModel
-import es.nauticapps.spotymedia.datalayer.models.SearchModel
-import es.nauticapps.spotymedia.datalayer.models.TracksResponseModel
+import es.nauticapps.spotymedia.datalayer.models.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -79,6 +76,13 @@ class SpotyNetwork {
 
         loadRetrofit(SpotyNetworkAuth().getAuthToken())
         return service.getArtistRelated(artistId)
+
+    }
+
+    suspend fun getAlbumTracks(idAlbum: String) : TracksFromAlbumModel {
+
+        loadRetrofit(SpotyNetworkAuth().getAuthToken())
+        return service.getAlbumTracks(idAlbum, 50)
 
     }
 

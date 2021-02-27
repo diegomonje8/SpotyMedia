@@ -16,7 +16,7 @@ import es.nauticapps.spotymedia.datalayer.models.AlbumItem
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class ArtistAlbumFragment(private val artistId: String)  : Fragment() {
+class ArtistAlbumFragment(private val artistId: String, private var listener: (Album: AlbumItem) -> Unit)  : Fragment() {
 
     private val viewModel: ArtistAlbumViewModel by viewModels()
     lateinit var binding : FragmentArtistAlbumBinding
@@ -41,7 +41,7 @@ class ArtistAlbumFragment(private val artistId: String)  : Fragment() {
     }
 
     private fun setUpView() {
-        myAdapter = ArtistAlbumFragmentAdapter(listOf<AlbumItem>())
+        myAdapter = ArtistAlbumFragmentAdapter(listOf<AlbumItem>(), listener)
 
         val myRecyclerView : RecyclerView = binding.albumdRecyclerList
         myRecyclerView.apply {

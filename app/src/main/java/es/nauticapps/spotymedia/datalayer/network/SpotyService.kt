@@ -2,10 +2,7 @@ package es.nauticapps.spotymedia.datalayer.network
 
 import es.nauticapps.spotymedia.datalayer.auth.models.RequestAuthDataModel
 import es.nauticapps.spotymedia.datalayer.auth.models.ResponseAuthDataModel
-import es.nauticapps.spotymedia.datalayer.models.AlbumResponseModel
-import es.nauticapps.spotymedia.datalayer.models.RelatedArtistsModel
-import es.nauticapps.spotymedia.datalayer.models.SearchModel
-import es.nauticapps.spotymedia.datalayer.models.TracksResponseModel
+import es.nauticapps.spotymedia.datalayer.models.*
 import retrofit2.http.*
 
 interface SpotyService {
@@ -22,6 +19,9 @@ interface SpotyService {
 
     @GET( "artists/{id}/top-tracks")
     suspend fun getArtistTopTracks(@Path( "id") id : String, @Query("market") market: String) : TracksResponseModel
+
+    @GET( "albums/{id}/tracks")
+    suspend fun getAlbumTracks(@Path( "id") id : String, @Query("limit") limit: Int) : TracksFromAlbumModel
 
 
 

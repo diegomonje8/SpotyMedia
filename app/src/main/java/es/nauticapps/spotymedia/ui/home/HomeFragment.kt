@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
 
         setupView()
 
-        viewModel.requestArtist("clapton")
+        viewModel.requestArtist("jackson")
         
         return binding.root
     }

@@ -2,14 +2,16 @@ package es.nauticapps.spotymedia.ui.artist.albums
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import es.nauticapps.spotymedia.R
 import es.nauticapps.spotymedia.databinding.ItemArtistAlbumBinding
 import es.nauticapps.spotymedia.datalayer.models.AlbumItem
+import es.nauticapps.spotymedia.datalayer.models.ArtistModel
 
-class ArtistAlbumFragmentAdapter (private var albums: List<AlbumItem>) : RecyclerView.Adapter<ArtistAlbumFragmentAdapter.ViewHolder>() {
+class ArtistAlbumFragmentAdapter (private var albums: List<AlbumItem>, private var listener: (album: AlbumItem) -> Unit) : RecyclerView.Adapter<ArtistAlbumFragmentAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemArtistAlbumBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -37,13 +39,18 @@ class ArtistAlbumFragmentAdapter (private var albums: List<AlbumItem>) : Recycle
             .placeholder(R.drawable.ic_extraterrestre)
             .into(viewHolder.binding.albumTrackImage)
 
+
+        viewHolder.binding.artistAlbumTracks.setOnClickListener( View.OnClickListener {
+            listener.invoke(albums[position])
+        })
+
     }
 
     private fun getAllArtists(position: Int) : String {
         var result = ""
         albums[position].artists.forEach {
-            result = if (result.isEmpty()) it.name
-            else "$result & $it.name"
+            if (result.isEmpty()) result = it.name
+            else result = result + " & " + it.name
         }
         return result
     }

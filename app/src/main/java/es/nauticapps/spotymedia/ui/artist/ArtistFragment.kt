@@ -1,13 +1,13 @@
 package es.nauticapps.spotymedia.ui.artist
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
@@ -46,7 +46,9 @@ class ArtistFragment : Fragment() {
 
     private fun setupView(artistId: String) {
 
-        pagerAdapter = ArtistViewPagerAdapter(this, artistId)
+        pagerAdapter = ArtistViewPagerAdapter(this, artistId) { album ->
+            findNavController().navigate(ArtistFragmentDirections.actionArtistFragmentToTracksFragment(album))
+        }
 
         binding.artistViewPager2.adapter = pagerAdapter
         TabLayoutMediator(binding.artistTabLayout, binding.artistViewPager2) { tab, position ->
@@ -84,6 +86,9 @@ class ArtistFragment : Fragment() {
         artistListState.artist?.let { myartist ->
 
             binding.artTextName.text = myartist.name
+            binding.artistFragmentGenres.text = getAllGenres(myartist.genres)
+            binding.artistFragmentFollowersText.text = myartist.followers.total.toString()
+            binding.artistFragmentRankingText.text = myartist.popularity.toString()
 
             var myImage = "https://images-assets.nasa.gov/image/PIA17669/PIA17669~thumb.jpg"
             try { myImage = myartist.images.firstOrNull()?.url.toString()
@@ -103,6 +108,15 @@ class ArtistFragment : Fragment() {
 
         }
 
+    }
+
+    private fun getAllGenres(artists: List<String>) : String {
+        var result = ""
+        artists.forEach {
+            result = if (result.isEmpty()) it
+            else "$result, $it"
+        }
+        return result
     }
 
 

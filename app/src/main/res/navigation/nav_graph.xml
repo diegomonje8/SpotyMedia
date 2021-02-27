@@ -21,5 +21,17 @@
         <argument
             android:name="artist"
             app:argType="es.nauticapps.spotymedia.datalayer.models.ArtistModel" />
+        <action
+            android:id="@+id/action_artistFragment_to_tracksFragment"
+            app:destination="@id/tracksFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tracksFragment"
+        android:name="es.nauticapps.spotymedia.ui.tracks.TracksFragment"
+        android:label="Tracks"
+        tools:layout="@layout/fragment_tracks" >
+        <argument
+            android:name="album"
+            app:argType="es.nauticapps.spotymedia.datalayer.models.AlbumItem" />
     </fragment>
 </navigation>
