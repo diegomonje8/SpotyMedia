@@ -2,9 +2,7 @@ package es.nauticapps.spotymedia.datalayer.auth
 
 import android.util.Log
 import es.nauticapps.spotymedia.BuildConfig
-import es.nauticapps.spotymedia.datalayer.models.RequestAuthDataModel
-import es.nauticapps.spotymedia.datalayer.models.ResponseAuthDataModel
-import es.nauticapps.spotymedia.datalayer.network.SpotyService
+import es.nauticapps.spotymedia.datalayer.auth.models.RequestAuthDataModel
 import okhttp3.Credentials
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

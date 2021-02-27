@@ -15,17 +15,18 @@ class HomeViewModel: ViewModel() {
     private val state = MutableLiveData<BaseState>()
     fun getState() : LiveData<BaseState> = state
 
-    fun requestArtist() {
+    fun requestArtist(searchText: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 state.postValue(BaseState.Loading())
-                val hi = SpotyRepository().requestArtist()
-
+                val listResult = SpotyRepository().requestArtist(searchText)
+                val listResultRelease = SpotyRepository().requestRealeses()
+                val listResultFeatures = SpotyRepository().requestFeatures()
+                state.postValue(BaseState.Normal(HomeListState(listResult, listResultRelease, listResultFeatures)))
             }catch(e: Exception) {
                 state.postValue(BaseState.Error(e))
             }
         }
-
     }
 
 }
