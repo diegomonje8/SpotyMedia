@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import es.nauticapps.spotymedia.base.BaseExtraData
+import es.nauticapps.spotymedia.base.BaseFragment
 import es.nauticapps.spotymedia.base.BaseState
 import es.nauticapps.spotymedia.databinding.FragmentArtistRelatedBinding
 import es.nauticapps.spotymedia.datalayer.models.ArtistModel
@@ -17,34 +19,26 @@ import es.nauticapps.spotymedia.ui.artist.toptracks.ArtistTopTrackViewModel
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class ArtistRelatedFragment(private val artistId: String)  : Fragment() {
+class ArtistRelatedFragment(private val artistId: String)  : BaseFragment<ArtistRelatedListState, ArtistRelatedViewModel, FragmentArtistRelatedBinding>() {
 
-    private val viewModel: ArtistRelatedViewModel by viewModels()
-    lateinit var binding : FragmentArtistRelatedBinding
+    /**
+     * Base Variables
+     */
+    override var viewModelClass: Class<ArtistRelatedViewModel> = ArtistRelatedViewModel::class.java
+    lateinit var vm : ArtistRelatedViewModel
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentArtistRelatedBinding = FragmentArtistRelatedBinding::inflate
+
+    /**
+     * Custom Variables
+     */
     lateinit var myAdapter: ArtistRelatedFramentAdapter
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-
-        binding = FragmentArtistRelatedBinding.inflate(inflater, container, false)
-
-        viewModel.getState().observe(viewLifecycleOwner)  { state ->
-            when(state) {
-                is BaseState.Loading -> updateToLoadinglState()
-                is BaseState.Normal -> updateToNormalState(state.data as ArtistRelatedListState)
-                is BaseState.Error -> updateToErrorState(state.dataError)
-            }
-        }
-
-        setupView()
-
+    /**
+     * Setup View
+     */
+    override fun setupView(viewModel: ArtistRelatedViewModel) {
+        vm = viewModel
         viewModel.requestRelated(artistId)
-
-        return binding.root
-
-    }
-
-    private fun setupView() {
 
         myAdapter = ArtistRelatedFramentAdapter(listOf<ArtistModel>())
 
@@ -57,9 +51,19 @@ class ArtistRelatedFragment(private val artistId: String)  : Fragment() {
 
     }
 
-    private fun updateToErrorState(dataError: Throwable) {
-
+    /**
+     * State Management Functions
+     */
+    override fun onNormal(data: ArtistRelatedListState) {
         binding.relatedProgressBar.visibility = View.GONE
+        myAdapter.updateList((data).listRelated)
+    }
+
+    override fun onLoading(dataLoading: BaseExtraData?) {
+        binding.relatedProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun onError(dataError: Throwable) {
         val msg = when (dataError) {
             is HttpException -> "Network Error: " + dataError.code().toString()
             is UnknownHostException -> "Please, Internet connection needed !!"
@@ -67,15 +71,6 @@ class ArtistRelatedFragment(private val artistId: String)  : Fragment() {
             else -> "Oops Unknown Error, Please try later !!"
         }
         Toast.makeText(requireActivity(), msg, Toast.LENGTH_LONG).show()
-    }
-
-    private fun updateToNormalState(data: ArtistRelatedListState) {
-        binding.relatedProgressBar.visibility = View.GONE
-        myAdapter.updateList((data).listRelated)
-    }
-
-    private fun updateToLoadinglState() {
-        binding.relatedProgressBar.visibility = View.VISIBLE
     }
 
 }

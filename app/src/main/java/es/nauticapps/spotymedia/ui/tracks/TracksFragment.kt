@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import es.nauticapps.spotymedia.R
+import es.nauticapps.spotymedia.base.BaseExtraData
+import es.nauticapps.spotymedia.base.BaseFragment
 import es.nauticapps.spotymedia.base.BaseState
 import es.nauticapps.spotymedia.databinding.FragmentArtistRelatedBinding
 import es.nauticapps.spotymedia.databinding.FragmentTracksBinding
@@ -26,34 +28,29 @@ import es.nauticapps.spotymedia.ui.artist.related.ArtistRelatedViewModel
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class TracksFragment : Fragment() {
+class TracksFragment : BaseFragment<TracksListState, TracksViewModel, FragmentTracksBinding>() {
 
-    private val viewModel: TracksViewModel by viewModels()
-    lateinit var binding : FragmentTracksBinding
+    /**
+     * Base Vars
+     */
+    override var viewModelClass: Class<TracksViewModel> = TracksViewModel::class.java
+    lateinit var vm : TracksViewModel
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentTracksBinding = FragmentTracksBinding::inflate
+
+
+    /**
+     * Custom Vars
+     */
     lateinit var myAdapter: TracksFragmentAdapter
     val args : TracksFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle? ): View? {
-
-        binding = FragmentTracksBinding.inflate(inflater, container, false)
-
-        viewModel.getState().observe(viewLifecycleOwner)  { state ->
-            when(state) {
-                is BaseState.Loading -> updateToLoadinglState()
-                is BaseState.Normal -> updateToNormalState(state.data as TracksListState)
-                is BaseState.Error -> updateToErrorState(state.dataError)
-            }
-        }
-
-        setupView()
-
+    /**
+     * SetUp View
+     */
+    override fun setupView(viewModel: TracksViewModel) {
+        vm = viewModel
         viewModel.requestAlbums(args.album)
 
-        return binding.root
-
-    }
-
-    private fun setupView() {
         myAdapter = TracksFragmentAdapter(listOf<AlbumTracks>())
 
         val myRecyclerView : RecyclerView = binding.trackFragmentRecycler
@@ -64,7 +61,11 @@ class TracksFragment : Fragment() {
         }
     }
 
-    private fun updateToNormalState(data: TracksListState) {
+
+    /**
+     * Manage States
+     */
+    override fun onNormal(data: TracksListState) {
         binding.trackFragmentProgressBar.visibility = View.GONE
         binding.trackFragmentText.text = data.album?.name ?: ""
 
@@ -74,22 +75,20 @@ class TracksFragment : Fragment() {
         } catch(e: Exception ) {  Log.e ("Spoty Media Error", "Error catching image")  }
 
         Picasso.get()
-            .load(myImage)
-            .resize(250,250)
-            .centerCrop()
-            .placeholder(R.drawable.ic_extraterrestre)
-            .into(binding.trackFragmentImage)
+                .load(myImage)
+                .resize(250,250)
+                .centerCrop()
+                .placeholder(R.drawable.ic_extraterrestre)
+                .into(binding.trackFragmentImage)
 
         myAdapter.updateList((data).listTracks)
-
     }
 
-    private fun updateToLoadinglState() {
+    override fun onLoading(dataLoading: BaseExtraData?) {
         binding.trackFragmentProgressBar.visibility = View.VISIBLE
     }
 
-    private fun updateToErrorState(dataError: Throwable) {
-        binding.trackFragmentProgressBar.visibility = View.GONE
+    override fun onError(dataError: Throwable) {
         val msg = when (dataError) {
             is HttpException -> "Network Error: " + dataError.code().toString()
             is UnknownHostException -> "Please, Internet connection needed !!"
@@ -97,5 +96,6 @@ class TracksFragment : Fragment() {
         }
         Toast.makeText(requireActivity(), msg, Toast.LENGTH_LONG).show()
     }
+
 
 }

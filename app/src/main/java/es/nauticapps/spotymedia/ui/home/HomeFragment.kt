@@ -1,17 +1,15 @@
 package es.nauticapps.spotymedia.ui.home
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import es.nauticapps.spotymedia.base.BaseState
+import es.nauticapps.spotymedia.base.BaseExtraData
+import es.nauticapps.spotymedia.base.BaseFragment
 import es.nauticapps.spotymedia.base.hideKeyboard
 import es.nauticapps.spotymedia.databinding.FragmentHomeBinding
 import es.nauticapps.spotymedia.datalayer.models.ArtistModel
@@ -21,40 +19,28 @@ import retrofit2.HttpException
 import java.net.UnknownHostException
 
 
-class HomeFragment : Fragment() {
+class HomeFragment() : BaseFragment<HomeListState, HomeViewModel, FragmentHomeBinding>() {
 
-    private val viewModel: HomeViewModel by viewModels()
-    lateinit var binding: FragmentHomeBinding
+    /**
+     * Base Variables
+     */
+    override var viewModelClass = HomeViewModel::class.java
+    lateinit var vm: HomeViewModel
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentHomeBinding  = FragmentHomeBinding::inflate
+
+    /**
+     * Custom Variables
+     */
     lateinit var myAdapter: HomeFragmentAdapter
     lateinit var myAdapterRelease: HomeFragmentAdapterRealeses
     lateinit var myAdapterFeature: HomeFragmentAdapterFeatures
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentHomeBinding.inflate(inflater,container,false)
-
-        viewModel.getState().observe(viewLifecycleOwner)  { state ->
-            when(state) {
-                is BaseState.Loading -> updateToLoadinglState()
-                is BaseState.Normal -> updateToNormalState(state.data as HomeListState)
-                is BaseState.Error -> updateToErrorState(state.dataError)
-            }
-        }
-
-        setupView()
-
-        viewModel.requestArtist("jackson")
-        
-        return binding.root
-    }
-
     /**
-     *  Set Up View
-     *
-
-     *
+     * Setup View
      */
-    private fun setupView() {
+    override fun setupView(viewModel: HomeViewModel) {
 
+        vm = viewModel
         myAdapter = HomeFragmentAdapter(listOf<ArtistModel>()) { artist ->
             findNavController().navigate(HomeFragmentDirections.actionHomeFragment2ToArtistFragment(artist))
         }
@@ -66,7 +52,7 @@ class HomeFragment : Fragment() {
         myRecyclerViewFeature.apply {
             adapter = myAdapterFeature
             layoutManager =  LinearLayoutManager(
-                context, LinearLayoutManager.HORIZONTAL, false)
+                    context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = DefaultItemAnimator()
         }
 
@@ -75,7 +61,7 @@ class HomeFragment : Fragment() {
         myRecyclerViewRelease.apply {
             adapter = myAdapterRelease
             layoutManager =  LinearLayoutManager(
-                context, LinearLayoutManager.HORIZONTAL, false)
+                    context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = DefaultItemAnimator()
         }
 
@@ -88,48 +74,33 @@ class HomeFragment : Fragment() {
 
         binding.outlinedTextField.setEndIconOnClickListener(View.OnClickListener {
             val searchedText = binding.outlinedTextField.editText?.text.toString()
-            viewModel.requestArtist(searchedText)
+            vm.requestArtist(searchedText)
             hideKeyboard()
         })
-
     }
 
-
     /**
-     * Normal State Actions
+     * State Management Functions
      */
-    private fun updateToNormalState(data: HomeListState) {
+    override fun onNormal(data: HomeListState) {
         binding.fragmentHomeProgressBar.visibility = View.GONE
         myAdapter.updateList((data).listArtists)
         myAdapterRelease.updateList((data).listRelease)
         myAdapterFeature.updateList((data).listFeatures)
     }
 
-    /**
-     * Loading State Actions
-     */
-    private fun updateToLoadinglState() {
+    override fun onLoading(dataLoading: BaseExtraData?) {
         binding.fragmentHomeProgressBar.visibility = View.VISIBLE
     }
 
-    /**
-     * Error State Actions
-     */
-    private fun updateToErrorState(dataError : Throwable) {
-        binding.fragmentHomeProgressBar.visibility = View.GONE
+    override fun onError(dataError: Throwable) {
         val msg = when (dataError) {
             is HttpException -> "Network Error: " + dataError.code().toString()
             is UnknownHostException -> "Please, Internet connection needed !!"
-
             else -> "Oops Unknown Error, Please try later !!"
         }
-
         Toast.makeText(requireActivity(), msg, Toast.LENGTH_LONG).show();
-
     }
 
-
-
-
-    }
+}
 

@@ -5,27 +5,29 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import es.nauticapps.spotymedia.base.BaseState
+import es.nauticapps.spotymedia.base.BaseViewModel
 import es.nauticapps.spotymedia.datalayer.SpotyRepository
 import es.nauticapps.spotymedia.datalayer.models.AlbumItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class TracksViewModel: ViewModel() {
+class TracksViewModel: BaseViewModel<TracksListState>() {
 
-    private val state = MutableLiveData<BaseState>()
-    fun getState() : LiveData<BaseState> = state
+    override val defaultState: TracksListState = TracksListState()
+
+    override fun onStartFirstTime() {}
 
     fun requestAlbums(album: AlbumItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                state.postValue(BaseState.Loading())
-                val listResult = SpotyRepository().requestAlbumTracks(album.id)
-                state.postValue(BaseState.Normal(TracksListState(listResult, album)))
-            }catch(e: Exception) {
-                state.postValue(BaseState.Error(e))
-            }
-        }
+        updateToLoadingState(TracksListState(listOf()))
+
+        executeCoroutines({
+            val listResult = SpotyRepository().requestAlbumTracks(album.id)
+            updateToNormalState(TracksListState(listResult, album))
+        } , { error ->
+            updateToErrorState(TracksListState(listOf()), error)
+        })
+
     }
 
 }
