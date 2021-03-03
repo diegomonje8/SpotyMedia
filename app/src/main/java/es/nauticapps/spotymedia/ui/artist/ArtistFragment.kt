@@ -1,52 +1,50 @@
 package es.nauticapps.spotymedia.ui.artist
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import es.nauticapps.spotymedia.R
 import es.nauticapps.spotymedia.base.BaseExtraData
-import es.nauticapps.spotymedia.base.BaseState
+import es.nauticapps.spotymedia.base.BaseFragment
 import es.nauticapps.spotymedia.databinding.FragmentArtistBinding
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class ArtistFragment : Fragment() {
+class ArtistFragment : BaseFragment<ArtistListState, ArtistViewModel, FragmentArtistBinding>() {
 
-    private val viewModel: ArtistViewModel by viewModels()
-    lateinit var binding : FragmentArtistBinding
+    /**
+     * Base Variables
+     */
+
+    override var viewModelClass = ArtistViewModel::class.java
+    lateinit var vm : ArtistViewModel
+
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentArtistBinding = FragmentArtistBinding::inflate
+
+    /**
+     * Custom Variables
+     */
+
     lateinit var pagerAdapter : ArtistViewPagerAdapter
     val args : ArtistFragmentArgs by navArgs()
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    /**
+     * SetUp View
+     */
 
-        binding = FragmentArtistBinding.inflate(inflater, container, false)
+    override fun setupView(viewModel: ArtistViewModel) {
+        vm = viewModel
 
-        viewModel.getState().observe(viewLifecycleOwner, { state ->
-            when (state) {
-                is BaseState.Normal -> onNormal(state.data as ArtistListState)
-                is BaseState.Loading -> onLoading(state.dataLoading)
-                is BaseState.Error -> onError(state.dataError)
-            }
-        })
+        vm.getInformation(args.artist)
 
-        setupView(args.artist.id)
-        viewModel.getInformation(args.artist)
-
-        return binding.root
-    }
-
-    private fun setupView(artistId: String) {
-
-        pagerAdapter = ArtistViewPagerAdapter(this, artistId) { album ->
+        pagerAdapter = ArtistViewPagerAdapter(this, args.artist.id) { album ->
             findNavController().navigate(ArtistFragmentDirections.actionArtistFragmentToTracksFragment(album))
         }
 
@@ -60,30 +58,14 @@ class ArtistFragment : Fragment() {
             }
 
         }.attach()
-
-
-
     }
 
-    private fun onLoading(dataLoading: BaseExtraData?) {
+    /**
+     * State Management
+     */
 
-    }
-
-
-    private fun onError(dataError: Throwable) {
-        val msg = when (dataError) {
-            is HttpException -> "Network Error: " + dataError.code().toString()
-            is UnknownHostException -> "Please, Internet connection needed !!"
-
-            else -> "Oops Unknown Error, Please try later !!"
-        }
-        Toast.makeText(requireActivity(), msg, Toast.LENGTH_LONG).show();
-    }
-
-
-
-    private fun onNormal(artistListState: ArtistListState) {
-        artistListState.artist?.let { myartist ->
+    override fun onNormal(data: ArtistListState) {
+        data.artist?.let { myartist ->
 
             binding.artTextName.text = myartist.name
             binding.artistFragmentGenres.text = getAllGenres(myartist.genres)
@@ -96,19 +78,33 @@ class ArtistFragment : Fragment() {
 
             }
             Picasso.get()
-                .load(myImage)
-                .resize(120,120)
-                .centerCrop()
-                .placeholder(R.drawable.ic_extraterrestre)
-                .into(binding.artImage)
-
-
-
-
+                    .load(myImage)
+                    .resize(120,120)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_extraterrestre)
+                    .into(binding.artImage)
 
         }
-
     }
+
+    override fun onLoading(dataLoading: BaseExtraData?) { }
+
+    override fun onError(dataError: Throwable) {
+        val msg = when (dataError) {
+            is HttpException -> "Network Error: " + dataError.code().toString()
+            is UnknownHostException -> "Please, Internet connection needed !!"
+
+            else -> "Oops Unknown Error, Please try later !!"
+        }
+        Toast.makeText(requireActivity(), msg, Toast.LENGTH_LONG).show();
+    }
+
+
+
+
+    /**
+     * Custom Tools
+     */
 
     private fun getAllGenres(artists: List<String>) : String {
         var result = ""
@@ -118,6 +114,8 @@ class ArtistFragment : Fragment() {
         }
         return result
     }
+
+
 
 
 }

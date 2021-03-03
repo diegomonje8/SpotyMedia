@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.nauticapps.spotymedia.base.BaseExtraData
+import es.nauticapps.spotymedia.base.BaseFragment
 import es.nauticapps.spotymedia.base.BaseState
 import es.nauticapps.spotymedia.databinding.FragmentArtistBinding
 import es.nauticapps.spotymedia.databinding.FragmentArtistToptrackBinding
@@ -23,33 +24,28 @@ import es.nauticapps.spotymedia.ui.home.HomeListState
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class ArtistTopTracksFragment(private val artistId: String) : Fragment() {
+class ArtistTopTracksFragment(private val artistId: String) : BaseFragment<ArtistTopTrackListState, ArtistTopTrackViewModel, FragmentArtistToptrackBinding>() {
 
-    private val viewModel: ArtistTopTrackViewModel by viewModels()
-    lateinit var binding : FragmentArtistToptrackBinding
+
+    /**
+     * Base vars
+     */
+    override var viewModelClass: Class<ArtistTopTrackViewModel> = ArtistTopTrackViewModel::class.java
+    lateinit var vm : ArtistTopTrackViewModel
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentArtistToptrackBinding = FragmentArtistToptrackBinding::inflate
+
+
+    /**
+     * Custom Vars
+     */
     lateinit var myAdapter: ArtistTopTracksFragmentAdapter
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-
-        binding = FragmentArtistToptrackBinding.inflate(inflater, container, false)
-
-        viewModel.getState().observe(viewLifecycleOwner)  { state ->
-            when(state) {
-                is BaseState.Loading -> updateToLoadinglState()
-                is BaseState.Normal -> updateToNormalState(state.data as ArtistTopTrackListState)
-                is BaseState.Error -> updateToErrorState(state.dataError)
-            }
-        }
-
-        setupView()
-
+    /**
+     * SetUp View
+     */
+    override fun setupView(viewModel: ArtistTopTrackViewModel) {
+        vm = viewModel
         viewModel.requestTopTracks(artistId)
-
-        return binding.root
-    }
-
-    private fun setupView() {
 
         myAdapter = ArtistTopTracksFragmentAdapter(listOf<Track>())
 
@@ -59,16 +55,21 @@ class ArtistTopTracksFragment(private val artistId: String) : Fragment() {
             layoutManager = LinearLayoutManager(context)
             itemAnimator = DefaultItemAnimator()
         }
-
     }
 
-    private fun updateToNormalState(data: ArtistTopTrackListState) {
+    /**
+     * Manage States
+     */
+    override fun onNormal(data: ArtistTopTrackListState) {
         binding.toptrackProgressBar.visibility = View.GONE
         myAdapter.updateList((data).listTopTracks)
     }
 
-    private fun updateToErrorState(dataError: Throwable) {
-        binding.toptrackProgressBar.visibility = View.GONE
+    override fun onLoading(dataLoading: BaseExtraData?) {
+        binding.toptrackProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun onError(dataError: Throwable) {
         val msg = when (dataError) {
             is HttpException -> "Network Error: " + dataError.code().toString()
             is UnknownHostException -> "Please, Internet connection needed !!"
@@ -77,13 +78,5 @@ class ArtistTopTracksFragment(private val artistId: String) : Fragment() {
         }
         Toast.makeText(requireActivity(), msg, Toast.LENGTH_LONG).show();
     }
-
-
-
-    private fun updateToLoadinglState() {
-        binding.toptrackProgressBar.visibility = View.VISIBLE
-    }
-
-
 
 }

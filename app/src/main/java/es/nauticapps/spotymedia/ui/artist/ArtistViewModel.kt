@@ -2,24 +2,30 @@ package es.nauticapps.spotymedia.ui.artist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import es.nauticapps.spotymedia.base.BaseState
+import es.nauticapps.spotymedia.base.BaseViewModel
 import es.nauticapps.spotymedia.datalayer.models.ArtistModel
-import kotlinx.coroutines.launch
 
-class ArtistViewModel : ViewModel() {
 
-    private val state = MutableLiveData<BaseState>()
-    fun getState(): LiveData<BaseState> = state
+class ArtistViewModel : BaseViewModel<ArtistListState>() {
+
+    override val defaultState: ArtistListState = ArtistListState()
+
+
+    override fun onStartFirstTime() {
+    }
 
     fun getInformation(artist: ArtistModel) {
-        state.postValue(BaseState.Loading())
-        try {
-            state.postValue(BaseState.Normal(ArtistListState(artist)))
-            } catch (e: Exception) {
-                state.postValue(BaseState.Error(e))
-            }
+        updateToLoadingState(ArtistListState())
+
+        executeCoroutines({
+              updateToNormalState(ArtistListState(artist))
+        }, { error ->
+            updateToErrorState(ArtistListState(), error)
+        })
+
     }
+
+
 
 }
